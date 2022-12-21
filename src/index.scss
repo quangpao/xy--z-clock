@@ -1,0 +1,93 @@
+@import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap');
+
+$background-color: #e8eceb;
+$primary-color: #8cbdb9;
+$secondary-color: #e09e50;
+$tertiary-color: #2d3e4e;
+
+.container {
+  min-height: 500px;
+  font-family: 'Patrick Hand', cursive;
+}
+
+img {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: $background-color;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.box {
+  min-height: 50%;
+  border: 1px solid black;
+  text-align: center;
+  color: $secondary-color;
+}
+
+span {
+  width: 100%;
+}
+.btn-check:checked+.btn, .btn.active, .btn.show, .btn:first-child:active, :not(.btn-check)+.btn:active {
+  border-color: transparent;
+  color: $secondary-color
+}
+
+#title-label {
+  min-height: 60px;
+  margin: 30px auto;
+  text-align: center;
+
+  h1 {
+    display: inline-block;
+    font-size: 3.5rem;
+    color: $tertiary-color;
+  }
+
+  h1#session-length {
+    color: $primary-color;
+  }
+  h1#break-length {
+    color: $secondary-color;
+  }
+}
+
+span > i {
+  color: $tertiary-color;
+}
+
+#timer-box {
+
+  #timer-label {
+    padding: 10px 0;
+    font-size: 2.5rem;
+    color: $tertiary-color;
+  }
+
+  #timer {
+    padding: 0 auto;
+    #time-left {
+      font-size: 5rem;
+      color: $tertiary-color;
+    }
+  }
+}
+
+.btn {
+  color: $tertiary-color;
+}
+
+//horizonal center the container
