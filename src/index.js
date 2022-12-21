@@ -14,11 +14,46 @@ class Timer extends React.Component {
     this.state = {
       breakTime: 5,
       sessionTime: 25,
-      currentState: 'Session'
+      currentState: 'Session',  
+      currentTimer: 1500,
+      intervalId: null
     }
+
+    this.handleCounting = this.handleCounting.bind(this)
+
+  }
+
+  countingDown = () => {
+    console.log(this.state.currentTimer)
+    if (this.state.currentTimer === 0 && this.state.currentState === 'Break') {
+      clearInterval(this.state.intervalId)
+      return;
+    }
+    if (this.state.currentTimer === 0 && this.state.currentState === 'Session') {
+      clearInterval(this.state.intervalId)
+      this.setState({
+        currentTimer: this.state.breakTime * 60,
+        currentState: 'Break'
+      })
+      this.handleCounting()
+      return;
+    }
+    this.setState({
+      currentTimer: this.state.currentTimer - 1
+    })
+  }
+
+  handleCounting = () => {
+    this.setState({
+      intervalId: setInterval(this.countingDown, 1000)
+    })
   }
 
   render() {
+
+    const minutes = Math.floor(this.state.currentTimer / 60)
+    const seconds = this.state.currentTimer % 60
+    console.log(minutes, seconds)
     return (
       <div className='container'>
         
@@ -28,7 +63,7 @@ class Timer extends React.Component {
 
         <div className='row'>
 
-          <div id='break-box' className='box col-2'>
+          <div id='break-box' className='box offset-1 col-2'>
             <span id='break-increment' className='btn'><FontAwesomeIcon icon={solid('caret-up')} size='3x' /></span>
             <div id='break-content'>
               <p id='break-label'>Break</p>
@@ -37,18 +72,18 @@ class Timer extends React.Component {
             <span id='break-decrement' className='btn'><FontAwesomeIcon icon={solid('caret-down')} size='3x' /></span>
           </div>
 
-          <div id='timer-box' className='box offset-1 col-6'>
+          <div id='timer-box' className='box col-6'>
             <p id='timer-label'>{this.state.currentState}</p>
             <div id='timer'>
-              <h1 id='time-left'>25:00</h1>
+              <h1 id='time-left'>{minutes}:{seconds < 10 ? '0' + seconds : seconds}</h1>
             </div>
             <div id='clicking-button'>
-              <span id='start_stop' className='btn'>Start</span>
+              <span id='start_stop' className='btn' onClick={this.handleCounting}>Start</span>
               <span id='reset' className='btn'><FontAwesomeIcon icon={solid('arrows-rotate')} size='3x' /></span>
             </div>
           </div>
 
-          <div id='session-box' className='box offset-1 col-2'>
+          <div id='session-box' className='box col-2'>
             <span id='session-increment' className='btn'><FontAwesomeIcon icon={solid('caret-up')} size='3x' /></span>
             <div id='session-content'>
               <p id='session-label'>Session</p>

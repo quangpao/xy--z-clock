@@ -33,7 +33,7 @@ code {
 
 .box {
   min-height: 50%;
-  border: 1px solid black;
+  // border: 1px solid black;
   text-align: center;
   color: $secondary-color;
 }
@@ -88,6 +88,9 @@ span > i {
 
 .btn {
   color: $tertiary-color;
+}
+#start_stop {
+  font-size: 36px;
 }
 
 //horizonal center the container
