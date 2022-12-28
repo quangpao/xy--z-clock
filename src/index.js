@@ -15,48 +15,68 @@ class Timer extends React.Component {
       breakTime: this.props.breakTime,
       sessionTime: this.props.sessionTime,
       currentState: 'Session',  
-      currentTimer: 1500,
+      currentTimer: this.props.sessionTime * 60,
       intervalId: null
     }
 
     this.handleCounting = this.handleCounting.bind(this)
-
+    this.resetHandle = this.resetHandle.bind(this)
+    this.breakDecreaseHandle = this.breakDecreaseHandle.bind(this)
+    this.breakIncreaseHandle = this.breakIncreaseHandle.bind(this)
+    this.sessionDecreaseHandle = this.sessionDecreaseHandle.bind(this)
+    this.sessionIncreaseHandle = this.sessionIncreaseHandle.bind(this)
   }
 
   countingDown = () => {
-    console.log(this.state.currentTimer)
+    // console.log(this.state.currentTimer)
     if (this.state.currentTimer === 0 && this.state.currentState === 'Break') {
+      const audio = document.getElementById('beep');
+      audio.play()
       clearInterval(this.state.intervalId)
+      this.setState({
+        intervalId: null,
+        currentTimer: this.state.sessionTime * 60,
+        currentState: 'Session'
+      }, () => this.handleCounting())
       return;
     }
     if (this.state.currentTimer === 0 && this.state.currentState === 'Session') {
+      const audio = document.getElementById('beep');
+      audio.play()
       clearInterval(this.state.intervalId)
+      console.log(this.state.intervalId)
       this.setState({
         currentTimer: this.state.breakTime * 60,
-        currentState: 'Break'
-      })
-      this.handleCounting()
+        currentState: 'Break',
+        intervalId: null
+      }, () => this.handleCounting())
+
+      
       return;
     }
-
-    this.resetHandle = this.resetHandle.bind(this)
-    this.breakIncreaseHandle = this.breakIncreaseHandle.bind(this)
-    this.breakDecreaseHandle = this.breakDecreaseHandle.bind(this)
-    this.sessionIncreaseHandle = this.sessionIncreaseHandle.bind(this)
-    this.sessionDecreaseHandle = this.sessionDecreaseHandle.bind(this)
+    this.setState({
+      currentTimer: this.state.currentTimer - 1
+    })
   }
 
   resetHandle() {
+    clearInterval(this.state.intervalId)
+    const audio = document.getElementById('beep');
+    audio.pause()
+    audio.currentTime = null
     this.setState({
-
+      intervalId: null,
       breakTime: this.props.breakTime,
       sessionTime: this.props.sessionTime,
-      currentState: 'Session'
+      currentTimer: this.props.sessionTime * 60,
+      currentState: 'Session',
 
     })
   }
 
   breakIncreaseHandle() {
+    // clearInterval(this.state.intervalId)
+    // this.setState({intervalId: null})
     const breakTime = this.state.breakTime 
     if (breakTime < 60) {
       this.setState({
@@ -66,17 +86,22 @@ class Timer extends React.Component {
   }
 
   sessionIncreaseHandle() {
+    // clearInterval(this.state.intervalId)
+    // this.setState({intervalId: null})
     const sessionTime = this.state.sessionTime 
     if (sessionTime < 60) {
       this.setState({
-        sessionTime: sessionTime + 1
+        sessionTime: sessionTime + 1,
+        currentTimer: (sessionTime + 1) * 60
       })
     }
   }
 
   breakDecreaseHandle() {
+    // clearInterval(this.state.intervalId)
+    // this.setState({intervalId: null})
     const breakTime = this.state.breakTime 
-    if (breakTime > 0) {
+    if (breakTime > 1) {
       this.setState({
         breakTime: breakTime - 1
       })
@@ -84,18 +109,25 @@ class Timer extends React.Component {
   }
 
   sessionDecreaseHandle() {
+    // clearInterval(this.state.intervalId)
+    // this.setState({intervalId: null})
     const sessionTime = this.state.sessionTime 
-    if (sessionTime > 0) {
+    if (sessionTime > 1) {
       this.setState({
-        sessionTime: sessionTime - 1
+        sessionTime: sessionTime - 1,
+        currentTimer: (sessionTime - 1) * 60
       })
     }
-    this.setState({
-      currentTimer: this.state.currentTimer - 1
-    })
   }
 
   handleCounting = () => {
+    console.log(this.state.intervalId)
+    if(this.state.intervalId) {
+      clearInterval(this.state.intervalId)
+      this.setState({intervalId: null})
+      console.log('can it go here?')
+      return; 
+    } 
     this.setState({
       intervalId: setInterval(this.countingDown, 1000)
     })
@@ -105,14 +137,14 @@ class Timer extends React.Component {
 
     const minutes = Math.floor(this.state.currentTimer / 60)
     const seconds = this.state.currentTimer % 60
-    console.log(minutes, seconds)
-    console.log(this.props.breakTime)
-    console.log(this.props.sessionTime)
-    console.log(this.state.breakTime)
-    console.log(this.state.sessionTime)
+    // console.log(minutes, seconds)
+    // console.log(this.props.breakTime)
+    // console.log(this.props.sessionTime)
+    // console.log(this.state.breakTime)
+    // console.log(this.state.sessionTime)
     return (
       <div className='container'>
-        
+        <audio id='beep' src='https://cdn.videvo.net/videvo_files/audio/premium/audio0186/watermarked/TruckBackupBeepsIn%20PE270801_preview.mp3'></audio>
         <div id='title-label'>
           <h1 id='session-length'>{this.state.sessionTime}</h1><h1>&nbsp;-&nbsp;</h1><h1 id='break-length'>{this.state.breakTime}</h1><h1>&nbsp;Clocks</h1>
         </div>
@@ -131,10 +163,10 @@ class Timer extends React.Component {
           <div id='timer-box' className='box col-6'>
             <p id='timer-label'>{this.state.currentState}</p>
             <div id='timer'>
-              <h1 id='time-left'>{minutes}:{seconds < 10 ? '0' + seconds : seconds}</h1>
+              <h1 id='time-left'>{minutes < 10 ? '0' + minutes : minutes}:{seconds < 10 ? '0' + seconds : seconds}</h1>
             </div>
             <div id='clicking-button'>
-              <span id='start_stop' className='btn' onClick={this.handleCounting}>Start</span>
+              <span id='start_stop' className='btn' onClick={this.handleCounting}>{this.state.intervalId ? 'Stop' : 'Start'}</span>
               <span id='reset' className='btn' onClick={this.resetHandle}><FontAwesomeIcon icon={solid('arrows-rotate')} size='3x' /></span>
             </div>
           </div>
